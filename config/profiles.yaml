@@ -1,0 +1,157 @@
+profiles:
+  normal:
+    rpm:
+      min: 600
+      max: 1800
+      slew_rpm_per_s: 250
+      micro_osc_hz: 0.015
+      micro_osc_frac: 0.04
+      noise_std: 8
+    power_draw_kw:
+      base_kw: 1.8
+      per_rpm_kw: 0.0024
+      lag_s: 3.5
+      noise_std: 0.08
+    temperature_c:
+      ambient_c: 24
+      per_kw_c: 6.0
+      lag_s: 18
+      micro_osc_hz: 0.01
+      micro_osc_amp_c: 0.4
+      noise_std: 0.12
+      bounds:
+        min: 10
+        max: 95
+    pressure_psi:
+      base_psi: 118
+      per_rpm_psi: 0.008
+      lag_s: 6
+      noise_std: 0.25
+      bounds:
+        min: 80
+        max: 160
+    vibration_mms:
+      base_mms: 1.2
+      per_rpm_mms: 0.0016
+      bearing_factor: 1.0
+      lag_s: 2.5
+      micro_osc_hz: 0.03
+      micro_osc_amp_mms: 0.08
+      noise_std: 0.05
+      bounds:
+        min: 0
+        max: 12
+    failing_drift:
+      enabled: false
+      temp_c_per_min: 0.0
+      vib_mms_per_min: 0.0
+      pressure_psi_per_min: 0.0
+      warning_prob: 0.0
+
+  noisy:
+    rpm:
+      min: 500
+      max: 2000
+      slew_rpm_per_s: 400
+      micro_osc_hz: 0.03
+      micro_osc_frac: 0.06
+      noise_std: 25
+      spike_prob: 0.06
+      spike_rpm: 350
+    power_draw_kw:
+      base_kw: 2.2
+      per_rpm_kw: 0.0027
+      lag_s: 2.5
+      noise_std: 0.18
+      spike_prob: 0.06
+      spike_kw: 0.9
+    temperature_c:
+      ambient_c: 26
+      per_kw_c: 6.5
+      lag_s: 12
+      micro_osc_hz: 0.02
+      micro_osc_amp_c: 0.6
+      noise_std: 0.35
+      bounds:
+        min: 10
+        max: 105
+      spike_prob: 0.05
+      spike_c: 7.0
+    pressure_psi:
+      base_psi: 120
+      per_rpm_psi: 0.007
+      lag_s: 5
+      noise_std: 0.6
+      bounds:
+        min: 75
+        max: 170
+      spike_prob: 0.05
+      spike_psi: 8.0
+    vibration_mms:
+      base_mms: 2.2
+      per_rpm_mms: 0.0019
+      bearing_factor: 1.35
+      lag_s: 1.8
+      micro_osc_hz: 0.05
+      micro_osc_amp_mms: 0.18
+      noise_std: 0.18
+      bounds:
+        min: 0
+        max: 18
+      spike_prob: 0.08
+      spike_mms: 1.6
+    failing_drift:
+      enabled: false
+      temp_c_per_min: 0.0
+      vib_mms_per_min: 0.0
+      pressure_psi_per_min: 0.0
+      warning_prob: 0.0
+
+  failing:
+    rpm:
+      min: 650
+      max: 1750
+      slew_rpm_per_s: 220
+      micro_osc_hz: 0.01
+      micro_osc_frac: 0.03
+      noise_std: 12
+    power_draw_kw:
+      base_kw: 2.0
+      per_rpm_kw: 0.0026
+      lag_s: 4.5
+      noise_std: 0.12
+    temperature_c:
+      ambient_c: 25
+      per_kw_c: 7.0
+      lag_s: 22
+      micro_osc_hz: 0.008
+      micro_osc_amp_c: 0.35
+      noise_std: 0.18
+      bounds:
+        min: 10
+        max: 140
+    pressure_psi:
+      base_psi: 115
+      per_rpm_psi: 0.007
+      lag_s: 8
+      noise_std: 0.35
+      bounds:
+        min: 50
+        max: 160
+    vibration_mms:
+      base_mms: 1.6
+      per_rpm_mms: 0.0018
+      bearing_factor: 1.25
+      lag_s: 3.2
+      micro_osc_hz: 0.025
+      micro_osc_amp_mms: 0.12
+      noise_std: 0.09
+      bounds:
+        min: 0
+        max: 30
+    failing_drift:
+      enabled: true
+      temp_c_per_min: 0.18
+      vib_mms_per_min: 0.03
+      pressure_psi_per_min: -0.12
+      warning_prob: 0.08
