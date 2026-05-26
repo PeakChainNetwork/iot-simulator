@@ -11,6 +11,8 @@ class Settings(BaseSettings):
 
     MQTT_HOST: str = Field(default="mosquitto")
     MQTT_PORT: int = Field(default=1883)
+    MQTT_USERNAME: str = Field(default="iot_client")
+    MQTT_PASSWORD: str = Field(default="iot_password")
 
     # Comma-separated list, matching repo conventions (dev-001,dev-002,...)
     SIM_DEVICES: str = Field(default="dev-001,dev-002,dev-003")

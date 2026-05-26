@@ -110,12 +110,15 @@ class SimulatorState:
 
 
 class MqttPublisher:
-    def __init__(self, host: str, port: int) -> None:
+    def __init__(self, host: str, port: int, username: str | None = None, password: str | None = None) -> None:
         self.host = host
         self.port = port
         self.client = mqtt.Client()
         self._connected = asyncio.Event()
         self._stopping = False
+
+        if username:
+            self.client.username_pw_set(username=username, password=password)
 
         self.client.on_connect = self._on_connect
         self.client.on_disconnect = self._on_disconnect
@@ -315,7 +318,12 @@ async def main_async() -> None:
     device_ids = settings.devices()
 
     state = SimulatorState()
-    publisher = MqttPublisher(settings.MQTT_HOST, settings.MQTT_PORT)
+    publisher = MqttPublisher(
+        settings.MQTT_HOST,
+        settings.MQTT_PORT,
+        settings.MQTT_USERNAME,
+        settings.MQTT_PASSWORD,
+    )
 
     # Create models
     models: dict[str, MachineModel] = {}
@@ -359,7 +367,12 @@ async def _startup() -> None:
     device_ids = settings.devices()
 
     app.state.profiles = profiles
-    app.state.publisher = MqttPublisher(settings.MQTT_HOST, settings.MQTT_PORT)
+    app.state.publisher = MqttPublisher(
+        settings.MQTT_HOST,
+        settings.MQTT_PORT,
+        settings.MQTT_USERNAME,
+        settings.MQTT_PASSWORD,
+    )
     app.state.models = {}
 
     for dev in device_ids:
