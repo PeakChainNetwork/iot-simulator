@@ -8,9 +8,23 @@ flowing through it** — then watch the results in the [dashboard](https://githu
 It only *publishes* data; it contains none of the platform's backend or
 detection logic.
 
-## Run it (no Docker)
+## Quick start — one command
 
-Requires **Python 3.10+**.
+Requires **Python 3.10+**. From the repo folder:
+
+```bash
+# Windows
+.\run.bat
+
+# macOS / Linux
+./run.sh
+```
+
+The script creates the virtualenv, installs dependencies, copies `.env` from
+`.env.example` (which already points at the demo broker), and starts publishing
+on **http://localhost:8001**. That's it.
+
+## Run it manually (no Docker)
 
 ```bash
 # 1. Virtual environment
@@ -21,8 +35,8 @@ source .venv/bin/activate          # macOS/Linux
 # 2. Dependencies
 pip install -r requirements.txt
 
-# 3. Configure — point it at PeakSoft's broker (host + credentials from PeakSoft)
-cp .env.example .env             # then edit MQTT_HOST / MQTT_PASSWORD
+# 3. Configure (optional — .env.example already has the demo broker)
+cp .env.example .env
 
 # 4. Start it (connects to the broker and begins publishing)
 uvicorn app.main:app --port 8001
