@@ -5,6 +5,7 @@ import json
 import logging
 import os
 import random
+import uuid
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from typing import Any, Literal, Optional
@@ -110,12 +111,28 @@ class SimulatorState:
 
 
 class MqttPublisher:
-    def __init__(self, host: str, port: int, username: str | None = None, password: str | None = None) -> None:
+    def __init__(
+        self,
+        host: str,
+        port: int,
+        username: str | None = None,
+        password: str | None = None,
+        transport: str = "tcp",
+        ws_path: str = "/mqtt",
+        tls: bool = False,
+        client_id: str | None = None,
+    ) -> None:
         self.host = host
         self.port = port
-        self.client = mqtt.Client()
+        cid = client_id or f"iot-sim-{uuid.uuid4().hex[:8]}"
+        self.client = mqtt.Client(client_id=cid, transport="websockets" if transport == "websockets" else "tcp")
         self._connected = asyncio.Event()
         self._stopping = False
+
+        if transport == "websockets":
+            self.client.ws_set_options(path=ws_path)
+        if tls:
+            self.client.tls_set()
 
         if username:
             self.client.username_pw_set(username=username, password=password)
@@ -216,6 +233,7 @@ async def device_loop(
 ) -> None:
     dt = max(0.01, 1.0 / float(default_rate_hz))
     last_t = asyncio.get_event_loop().time()
+    sent = 0
 
     while True:
         rule = await state.get_rule_for(device_id)
@@ -289,6 +307,9 @@ async def device_loop(
             payload = json.dumps(metrics)
 
         await publisher.publish(build_topic(topic_device_id), payload, qos=1)
+        sent += 1
+        if sent == 1 or sent % 10 == 0:
+            logger.info("Published %d msg(s) to %s", sent, build_topic(device_id))
         await asyncio.sleep(dt_target)
 
 
@@ -323,6 +344,10 @@ async def main_async() -> None:
         settings.MQTT_PORT,
         settings.MQTT_USERNAME,
         settings.MQTT_PASSWORD,
+        transport=settings.MQTT_TRANSPORT,
+        ws_path=settings.MQTT_WS_PATH,
+        tls=settings.MQTT_TLS,
+        client_id=settings.MQTT_CLIENT_ID or None,
     )
 
     # Create models
@@ -372,6 +397,10 @@ async def _startup() -> None:
         settings.MQTT_PORT,
         settings.MQTT_USERNAME,
         settings.MQTT_PASSWORD,
+        transport=settings.MQTT_TRANSPORT,
+        ws_path=settings.MQTT_WS_PATH,
+        tls=settings.MQTT_TLS,
+        client_id=settings.MQTT_CLIENT_ID or None,
     )
     app.state.models = {}
 
