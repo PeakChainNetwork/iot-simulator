@@ -66,7 +66,7 @@ Drive anomalies/attacks to see the platform react, via the control API:
 ```bash
 curl -X POST http://localhost:8001/scenario \
   -H "Content-Type: application/json" \
-  -d '{"global_":{"scenario":"spike","enabled":true}}'
+  -d '{"global":{"scenario":"spike","enabled":true}}'
 ```
 
 Scenarios: `spike`, `drift`, `flood`, `bad_payload`, `impersonation`.
